@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-eth_macd = pd.read_csv("eth_macd_18_50_13_post_trade_table.csv")
+eth_macd = pd.read_csv("../datasets/eth_macd_18_50_13_post_trade_table.csv")
 
 # ============================================================
 # 1) Base preparation
