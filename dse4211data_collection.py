@@ -35,11 +35,11 @@ eth_data = download_crypto_full("ETH-USD", start_date, end_date)
 
 # Save and Preview
 if btc_data is not None:
-    btc_data.to_csv("BTC_full_data.csv")
+    btc_data.to_csv("../datasets/BTC_full_data.csv")
     print("\n--- BTC Full Data (Last 5 days) ---")
     print(btc_data.tail())
 
 if eth_data is not None:
-    eth_data.to_csv("ETH_full_data.csv")
+    eth_data.to_csv("../datasets/ETH_full_data.csv")
     print("\n--- ETH Full Data (Last 5 days) ---")
     print(eth_data.tail())
