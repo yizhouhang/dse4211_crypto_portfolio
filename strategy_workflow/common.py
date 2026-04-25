@@ -41,7 +41,7 @@ def export_strategy_report(
     data_dir.mkdir(parents=True, exist_ok=True)
     plots_dir.mkdir(parents=True, exist_ok=True)
 
-    daily_df, trade_log, summary = module.evaluate_strategy_full(
+    daily_df, trade_log, _summary = module.evaluate_strategy_full(
         post_trade_df=table_df,
         position_col=position_col,
         fee=0.0,
@@ -73,17 +73,9 @@ def export_strategy_report(
         show=False,
     )
 
-    return {
-        "strategy": strategy_name,
-        "slug": strategy_slug,
-        "position_col": position_col,
-        **summary,
-    }
-
 
 def run_stage_reports(stage_slug: str, strategy_specs: list[dict]):
     module = load_evaluation_module()
-    rows = []
 
     for spec in strategy_specs:
         if "table_df" in spec:
@@ -91,7 +83,7 @@ def run_stage_reports(stage_slug: str, strategy_specs: list[dict]):
         else:
             table_df = module.normalize_strategy_table(pd.read_csv(spec["csv_path"]))
 
-        row = export_strategy_report(
+        export_strategy_report(
             module,
             stage_slug=stage_slug,
             strategy_name=spec["name"],
@@ -99,11 +91,5 @@ def run_stage_reports(stage_slug: str, strategy_specs: list[dict]):
             table_df=table_df,
             position_col=spec.get("position_col", "position"),
         )
-        row["category"] = spec.get("category", "")
-        rows.append(row)
 
-    summary_df = pd.DataFrame(rows).sort_values("strategy").reset_index(drop=True)
-    output_path = REPORTS_ROOT / stage_slug / "metrics_summary.csv"
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    summary_df.to_csv(output_path, index=False)
-    print(f"{stage_slug}: generated {len(summary_df)} reports -> {output_path.relative_to(ROOT)}")
+    print(f"{stage_slug}: generated {len(strategy_specs)} strategy reports")
